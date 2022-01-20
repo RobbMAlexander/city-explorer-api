@@ -45,8 +45,10 @@ app.get('/weather', async (req, res) => {
   // }
   //    // res.send(weatherData.city.city_name);
 
-  res.send('Weather route test');
+  let groomedWeatherData = displayedWeather.data.data.map(day => new WeatherDisplay(day))
 
+  res.send('Weather route test');
+  // res.send(groomedWeatherData);
 });
 
 
