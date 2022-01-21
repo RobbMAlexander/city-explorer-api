@@ -5,81 +5,56 @@ const app = express();
 const cors = require('cors');
 app.use(cors());
 require('dotenv').config();
-const axios = require('axios');
+// const axios = require('axios');
 const PORT = process.env.PORT || 3001;
 // const weatherData = require('./data/weather.json');
+
+const getWeather = require('./weather');
+const getMovies = require('./movies');
+
+// note: add 'img' before imported  path
 
 app.get('/', (req, res) => {
   res.send('Greeting check for root URL');
 });
 
-app.get('/weather', async (req, res) => {
-  let lat = req.query.lat;
-  let lon = req.query.lon;
-  // placeholder filtering below
+// let url = `https://api.weatherbit.io/v1.0/forecast/daily?key=${process.env.REACT_APP_WEATHER_API_KEY}&lat=${lat}&lon=${lon}&units=I&days=3`;
 
-  // note: days=3 in query for shorter terminal output during build
-
-  let url = `https://api.weatherbit.io/v1.0/forecast/daily?key=${process.env.REACT_APP_WEATHER_API_KEY}&lat=${lat}&lon=${lon}&units=I&days=3`;
-
-  // let relevantWeatherData = weatherData.filter(city => city.property === relevantproperty)
-
-  let displayedWeather = await axios.get(url);
-
-  // data property identification logs (looking good so far)
-
-  console.log(displayedWeather);
-  console.log(displayedWeather.data);
-  console.log(displayedWeather.data.city_name);
-  console.log(displayedWeather.data.data[1].low_temp);
-  console.log(displayedWeather.data.data[1].high_temp);
-  console.log(displayedWeather.data.data[1].weather.description);
-  console.log(req.query.lat);
-  console.log(req.query.lon);
-
-  //    let forecast = (data) => {
-
-
-  //     const new WeatherDisplay (displayedWeather);
-  //    }
-  // }
-  //    // res.send(weatherData.city.city_name);
-
-  let groomedWeatherData = displayedWeather.data.data.map(day => new WeatherDisplay(day))
-
-  res.send('Weather route test');
-  // res.send(groomedWeatherData);
-});
-
-
-// class WeatherDisplay {
-//   constructor(city) {
-//     this.cityName = city.city_name;
-//     this.dayOneHigh = city.data[1].
-//       this.dayOneLow
-//   }
-// }
+// note: temporary 'days=3' query for shorter terminal output during development
 
 
 
 
 
+// app.get('/movies', async (req, res) => {
 
-// class Movies {
-//   constructor(movies){
+//   let cityQuery = req.query.query;
 
+//   // let url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_MOVIE_API_KEY}&language=en-US&query=${cityQuery}&page=1&include_adult=false`;
 
-//   }
-// }
+//   let url = `https://api.themoviedb.org/3/search/movie`;
 
-// movieDB API call -- needs proper queries!!
+//   let parameters = {
+//     key: process.env.REACT_APP_MOVIE_API_KEY,
+//     language: 'en-US',
+//     query: cityQuery,
+//     page: 1,
+//     include_adult: false,
+//   };
 
-// app.get('/', (req, res) => {
+//   // let receivedMoviesAPI = await axios.get(url);
 
-//   let url = `https://api.weatherbit.io/v1.0/forecast/daily?key=${process.env.REACT_APP_MOVIE_API_KEY}&`;
-// res.send('Greeting check for root URL');
-
+//   // axios.get(url, { parameters })
+//   //   .then((receivedMoviesAPI) => {
+//   //     (receivedMoviesAPI.data.results.map(movie => new MovieDisplay(movie)))
+//   //       .then(groomedMovieData => res.send(groomedMovieData))
+//   //       .catch(err=> console.error(err));
+//   //   });
 // });
+
+app.get('/weather', getWeather);
+
+app.get('/movies', getMovies);
 
 // app.get('/', (req, res) => {
 //   res.send('Greeting check for root URL');
@@ -88,7 +63,6 @@ app.get('/weather', async (req, res) => {
 app.get('*', (req, res) => {
   res.send('Oops! Try a valid page address.');
 });
-
 
 
 app.listen(PORT, () => console.log(`listen check for port ${PORT}`));
