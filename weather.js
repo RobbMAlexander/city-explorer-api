@@ -11,7 +11,7 @@ class WeatherDisplay {
   }
 }
 
-function getWeather(req, res) {
+async function getWeather(req, res) {
   let lat = req.query.lat;
   let lon = req.query.lon;
 

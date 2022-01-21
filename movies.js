@@ -10,7 +10,7 @@ class MovieDisplay {
   }
 }
 
-function getMovies(req, res) {
+async function getMovies(req, res) {
 
   let cityQuery = req.query.query;
 
