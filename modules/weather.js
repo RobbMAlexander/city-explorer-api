@@ -1,12 +1,20 @@
 'use strict';
 
+// defined axios
+const axios = require('axios');
+
 let cache = require('./cache.js');
+
 
 module.exports = getWeather;
 
-function getWeather(latitude, longitude) {
-  const key = 'weather-' + latitude + longitude;
-  const url = `http://api.weatherbit.io/v2.0/forecast/daily/?key=${WEATHER_API_KEY}&lang=en&lat=${lat}&lon=${lon}&days=5`;
+// shortened latitude and longitude symbols to match later queries
+function getWeather(lat, lon) {
+  const key = 'weather-' + lat + lon;
+
+  // added `process.env` to url
+  // api url to 'v1.0'
+  const url = `https://api.weatherbit.io/v1.0/forecast/daily/?key=${process.env.REACT_APP_WEATHER_API_KEY}&lang=en&lat=${lat}&lon=${lon}&days=5`;
 
   if (cache[key] && (Date.now() - cache[key].timestamp < 50000)) {
     console.log('Cache hit');
