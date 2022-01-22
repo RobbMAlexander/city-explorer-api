@@ -1,69 +1,27 @@
 'use strict';
 
+require('dotenv');
 const express = require('express');
-const app = express();
 const cors = require('cors');
+
+const PORT = process.env.PORT || 3000;
+
+// needed cors invocation
 app.use(cors());
-require('dotenv').config();
-// const axios = require('axios');
-const PORT = process.env.PORT || 3001;
-// const weatherData = require('./data/weather.json');
 
-const getWeather = require('./weather');
-const getMovies = require('./movies');
+const weather = require('./modules/weather.js');
+const app = express();
 
-// note: add 'img' before imported  path
+app.get('/weather', weatherHandler);
 
-app.get('/', (req, res) => {
-  res.send('Greeting check for root URL');
-});
+function weatherHandler(request, response) {
+  const { lat, lon } = request.query;
+  weather(lat, lon)
+    .then(summaries => response.send(summaries))
+    .catch((error) => {
+      console.error(error);
+      response.status(200).send('Sorry. Something went wrong!');
+    });
+}
 
-// let url = `https://api.weatherbit.io/v1.0/forecast/daily?key=${process.env.REACT_APP_WEATHER_API_KEY}&lat=${lat}&lon=${lon}&units=I&days=3`;
-
-// note: temporary 'days=3' query for shorter terminal output during development
-
-
-
-
-
-// app.get('/movies', async (req, res) => {
-
-//   let cityQuery = req.query.query;
-
-//   // let url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_MOVIE_API_KEY}&language=en-US&query=${cityQuery}&page=1&include_adult=false`;
-
-//   let url = `https://api.themoviedb.org/3/search/movie`;
-
-//   let parameters = {
-//     key: process.env.REACT_APP_MOVIE_API_KEY,
-//     language: 'en-US',
-//     query: cityQuery,
-//     page: 1,
-//     include_adult: false,
-//   };
-
-//   // let receivedMoviesAPI = await axios.get(url);
-
-//   // axios.get(url, { parameters })
-//   //   .then((receivedMoviesAPI) => {
-//   //     (receivedMoviesAPI.data.results.map(movie => new MovieDisplay(movie)))
-//   //       .then(groomedMovieData => res.send(groomedMovieData))
-//   //       .catch(err=> console.error(err));
-//   //   });
-// });
-
-app.get('/weather', getWeather);
-
-app.get('/movies', getMovies);
-
-// app.get('/', (req, res) => {
-//   res.send('Greeting check for root URL');
-// });
-
-app.get('*', (req, res) => {
-  res.send('Oops! Try a valid page address.');
-});
-
-
-app.listen(PORT, () => console.log(`listen check for port ${PORT}`));
-
+app.listen(PORT, () => console.log(`Server up on ${PORT}`));
